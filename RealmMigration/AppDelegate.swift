@@ -19,7 +19,6 @@ class Person: Object {
     
     dynamic var firstName = ""     // v3
     dynamic var lastName = ""      // v3
-
     
     override static func primaryKey() -> String? {
         return "firstName"
@@ -42,25 +41,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                             print("oldSchemaVersion: \(oldSchemaVersion)")
                                             
                                             if oldSchemaVersion < 3 {
-                                                
-                                                AppDelegate.migrateFrom2To3(with: migration)
+                                                self.migrateFrom2To3(with: migration)
                                             }
                                             
                                             
         })
         
-        print("before, version: \(Realm.Configuration.defaultConfiguration.schemaVersion)")
         
         Realm.Configuration.defaultConfiguration = config
         
-        print("after, version: \(Realm.Configuration.defaultConfiguration.schemaVersion)")
-        
-        AppDelegate.useVersion2To3()
+
+        useVersion2To3()
         
         return true
     }
     
-    static func migrateFrom2To3(with migration: Migration) {
+    func migrateFrom2To3(with migration: Migration) {
         print("migrateFrom2To3")
         migration.enumerateObjects(ofType: Person.className()) { (oldObject, newObject) in
             guard let fullname = oldObject?["fullname"] as? String else {
@@ -73,7 +69,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     
-    static func useVersion2To3() {
+    
+    func useVersion2To3() {
         let tom = Person()
         tom.firstName = "tom"
         tom.lastName = "Zhu"
