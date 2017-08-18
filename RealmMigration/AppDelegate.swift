@@ -15,15 +15,19 @@ class Person: Object {
     
     dynamic var email = ""     // v1
     
-    dynamic var fullname = ""   // v2
+//    dynamic var fullname = ""   // v2
+    
+    dynamic var firstName = ""     // v3
+    dynamic var lastName = ""      // v3
+
     
     override static func primaryKey() -> String? {
-        return "fullname"
+        return "firstName"
     }
 }
 
 
-let currentSchemaVersion: UInt64 = 2
+let currentSchemaVersion: UInt64 = 3
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -37,9 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                             
                                             print("oldSchemaVersion: \(oldSchemaVersion)")
                                             
-                                            if oldSchemaVersion < 2 {
+                                            if oldSchemaVersion < 3 {
                                                 
-                                                AppDelegate.migrateFrom1To2(with: migration)
+                                                AppDelegate.migrateFrom2To3(with: migration)
                                             }
                                             
                                             
@@ -51,30 +55,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         print("after, version: \(Realm.Configuration.defaultConfiguration.schemaVersion)")
         
-        AppDelegate.useVersion1To2()
+        AppDelegate.useVersion2To3()
         
         return true
     }
     
-    static func migrateFrom1To2(with migration: Migration) {
-        print("migrateFrom1To2")
-        migration.renameProperty(onType: Person.className(), from: "name", to: "fullname")
+    static func migrateFrom2To3(with migration: Migration) {
+        print("migrateFrom2To3")
+        migration.enumerateObjects(ofType: Person.className()) { (oldObject, newObject) in
+            guard let fullname = oldObject?["fullname"] as? String else {
+                fatalError("fullName is not a string")
+            }
+            
+            newObject?["firstName"] = fullname
+            newObject?["lastName"] = ""
+        }
     }
 
     
-    static func useVersion1To2() {
+    static func useVersion2To3() {
         let tom = Person()
-        tom.fullname = "tom"
+        tom.firstName = "tom"
+        tom.lastName = "Zhu"
         tom.age = 54
         tom.email = "222@apple.com"
         
         let bruno = Person()
-        bruno.fullname = "bruno"
+        bruno.firstName = "bruno"
+        bruno.lastName = "Zhu"
         bruno.age = 31
         bruno.email = "111@apple.com"
         
         let taylor = Person()
-        taylor.fullname = "taylor"
+        taylor.firstName = "taylor"
+        taylor.lastName = "Zhu"
         taylor.age = 27
         taylor.email = "333@apple.com"
         
