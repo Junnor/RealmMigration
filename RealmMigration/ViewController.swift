@@ -43,7 +43,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let person = persons[indexPath.row]
         
-        cell.textLabel?.text = person.name
+        cell.textLabel?.text = person.fullname
 
         var detail = ""
         detail = "age: \(person.age), email: \(person.email)"

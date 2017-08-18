@@ -10,18 +10,20 @@ import UIKit
 import RealmSwift
 
 class Person: Object {
-    dynamic var name = ""      // v0
+//    dynamic var name = ""      // v0
     dynamic var age = 0        // v0
     
     dynamic var email = ""     // v1
     
+    dynamic var fullname = ""   // v2
+    
     override static func primaryKey() -> String? {
-        return "name"
+        return "fullname"
     }
 }
 
 
-let currentSchemaVersion: UInt64 = 1
+let currentSchemaVersion: UInt64 = 2
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -35,9 +37,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                             
                                             print("oldSchemaVersion: \(oldSchemaVersion)")
                                             
-                                            if oldSchemaVersion < 1 {
+                                            if oldSchemaVersion < 2 {
                                                 
-                                                AppDelegate.migrateFrom0To1(with: migration)
+                                                AppDelegate.migrateFrom1To2(with: migration)
                                             }
                                             
                                             
@@ -49,52 +51,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         print("after, version: \(Realm.Configuration.defaultConfiguration.schemaVersion)")
         
-        AppDelegate.useVersion1()
+        AppDelegate.useVersion1To2()
         
         return true
     }
     
-    static func migrateFrom0To1(with migration: Migration) {
-        
-        print("migrateFrom0To1")
-        
-        migration.enumerateObjects(ofType: Person.className()) { (oldObject, newObject) in
-            newObject?["email"] = ""
-        }
+    static func migrateFrom1To2(with migration: Migration) {
+        print("migrateFrom1To2")
+        migration.renameProperty(onType: Person.className(), from: "name", to: "fullname")
     }
 
-    //    static func useVersion0() {
-    //        let tom = Person()
-    //        tom.name = "tom"
-    //        tom.age = 54
-    //
-    //        let bruno = Person()
-    //        bruno.name = "bruno"
-    //        bruno.age = 31
-    //
-    //        let taylor = Person()
-    //        taylor.name = "taylor"
-    //        taylor.age = 27
-    //
-    //        let realm = try! Realm()
-    //        try! realm.write {
-    //            realm.add([taylor, bruno, tom], update: true)
-    //        }
-    //    }
     
-    static func useVersion1() {
+    static func useVersion1To2() {
         let tom = Person()
-        tom.name = "tom"
+        tom.fullname = "tom"
         tom.age = 54
         tom.email = "222@apple.com"
         
         let bruno = Person()
-        bruno.name = "bruno"
+        bruno.fullname = "bruno"
         bruno.age = 31
         bruno.email = "111@apple.com"
         
         let taylor = Person()
-        taylor.name = "taylor"
+        taylor.fullname = "taylor"
         taylor.age = 27
         taylor.email = "333@apple.com"
         
@@ -103,6 +83,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             realm.add([taylor, bruno, tom], update: true)
         }
     }
-    
 }
 
