@@ -46,7 +46,7 @@ class ViewController: UIViewController, UITableViewDataSource {
         cell.textLabel?.text = person.name
 
         var detail = ""
-        detail = "age: \(person.age)"
+        detail = "age: \(person.age), email: \(person.email)"
         cell.detailTextLabel?.text = detail
         
         return cell
