@@ -43,11 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                             
         })
         
-        print("before, version: \(Realm.Configuration.defaultConfiguration.schemaVersion)")
         
         Realm.Configuration.defaultConfiguration = config
         
-        print("after, version: \(Realm.Configuration.defaultConfiguration.schemaVersion)")
         
         AppDelegate.useVersion1()
         
@@ -63,25 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-    //    static func useVersion0() {
-    //        let tom = Person()
-    //        tom.name = "tom"
-    //        tom.age = 54
-    //
-    //        let bruno = Person()
-    //        bruno.name = "bruno"
-    //        bruno.age = 31
-    //
-    //        let taylor = Person()
-    //        taylor.name = "taylor"
-    //        taylor.age = 27
-    //
-    //        let realm = try! Realm()
-    //        try! realm.write {
-    //            realm.add([taylor, bruno, tom], update: true)
-    //        }
-    //    }
-    
     static func useVersion1() {
         let tom = Person()
         tom.name = "tom"
